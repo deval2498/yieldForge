@@ -9,6 +9,7 @@ on:
     branches: [main]
     paths:
       - 'frontend/**'
+  workflow_dispatch:  # Adds manual trigger
 
 jobs:
   frontend:
@@ -25,6 +26,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
+          
       - name: Setup pnpm
         run: npm install -g pnpm
 
