@@ -35,7 +35,7 @@ contract YieldVault is Ownable {
         strategy.deposit(address(asset), amount);
 
         uint256 vaultBalance = strategy.balance();
-        uint256 sharesToMint = totalShares == 0 ? amount : (amount * totalShares) / vaultBalance;
+        uint256 sharesToMint = totalShares == 0 ? amount : (amount * totalShares) / (vaultBalance - amount);
 
         shares[msg.sender] += sharesToMint;
         totalShares += sharesToMint;
