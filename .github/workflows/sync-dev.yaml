@@ -5,11 +5,14 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write  # ✨ THIS IS REQUIRED for pushing to branches
+
 jobs:
   sync-dev:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout dev branch
         uses: actions/checkout@v3
         with:
           ref: dev
