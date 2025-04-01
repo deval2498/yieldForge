@@ -1,56 +1,54 @@
-name: Smart Sync Dev with Main
+name: Sync Dev with Main
 
 on:
   push:
     branches:
       - main
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   sync-dev:
+    name: Sync dev branch with main
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout main
+      - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          ref: main
-
-      - name: Set up Git
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Configure Git
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-
-      - name: Install GitHub CLI
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+      
+      - name: Sync dev with main
         run: |
-          sudo apt-get install gh
-
-      - name: Check if dev is behind main
-        id: check_diff
-        run: |
-          git fetch origin dev
-          if git rev-list origin/dev..origin/main | grep .; then
-            echo "needs_sync=true" >> $GITHUB_OUTPUT
+          # Fetch all branches
+          git fetch origin
+          
+          # Check if dev branch exists
+          if git ls-remote --heads origin dev | grep dev; then
+            echo "Dev branch exists, syncing with main..."
+            
+            # Checkout dev branch
+            git checkout dev
+            
+            # Merge main into dev
+            git merge --no-ff origin/main -m "Merge main into dev to keep branches in sync"
+            
+            # Push changes to dev
+            git push origin dev
+            
+            echo "Successfully synced dev branch with main"
           else
-            echo "Dev is up-to-date with main"
-            echo "needs_sync=false" >> $GITHUB_OUTPUT
+            echo "Dev branch doesn't exist, creating from main..."
+            
+            # Create dev branch from main
+            git checkout -b dev
+            
+            # Push new dev branch
+            git push origin dev
+            
+            echo "Successfully created dev branch from main"
           fi
-
-      - name: Create PR from main to dev
-        if: steps.check_diff.outputs.needs_sync == 'true'
-        run: |
-          gh pr create \
-            --base dev \
-            --head main \
-            --title "Sync: main → dev" \
-            --body "Auto-generated PR to keep dev in sync with main after push."
-
-      # Optional: Auto-merge if checks pass
-      - name: Enable auto-merge
-        if: steps.check_diff.outputs.needs_sync == 'true'
-        run: |
-          PR_ID=$(gh pr list --head main --base dev --json number -q '.[0].number')
-          gh pr merge $PR_ID --auto --squash
-
