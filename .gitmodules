@@ -1,3 +1,6 @@
 [submodule "contracts/YieldForge/lib/forge-std"]
 	path = contracts/YieldForge/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "contracts/YieldForge/lib/openzeppelin-contracts"]
+	path = contracts/YieldForge/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
