@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import BodyWrapper from "../../components/BodyWrapper";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
   description: "Simplify DeFi yield with permissionless vaults and strategy optimization",
 };
 
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -20,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${spaceGrotesk.variable} antialiased`}>
-        {children}
+        <BodyWrapper>{children}</BodyWrapper>
       </body>
     </html>
   );

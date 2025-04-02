@@ -15,7 +15,7 @@ export default function LandingPage() {
       >
         <motion.h1
           className="text-5xl sm:text-6xl font-bold mb-6"
-          style={{ color: 'var(--color-text-base)', fontFamily: 'var(--font-sans)' }}
+          style={{ color: 'var(--color-text-base)' }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
@@ -25,7 +25,7 @@ export default function LandingPage() {
 
         <motion.p
           className="text-lg sm:text-xl mb-8"
-          style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-sans)' }}
+          style={{ color: 'var(--color-text-muted)' }}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
@@ -43,8 +43,7 @@ export default function LandingPage() {
               className="inline-block px-6 py-3 font-medium text-lg rounded-xl transition cursor-pointer"
               style={{ 
                 backgroundColor: 'var(--color-primary)', 
-                color: 'var(--color-background)',
-                fontFamily: 'var(--font-sans)'
+                color: 'var(--color-background)'
               }}
             >
               🚀 Launch App

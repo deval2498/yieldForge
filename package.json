@@ -11,6 +11,8 @@
   "license": "ISC",
   "packageManager": "pnpm@10.7.0",
   "dependencies": {
-    "@openzeppelin/contracts": "^5.2.0"
+    "@openzeppelin/contracts": "^5.2.0",
+    "react-tsparticles": "^2.12.2",
+    "tsparticles-slim": "^2.12.0"
   }
 }
