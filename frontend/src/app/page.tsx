@@ -6,7 +6,7 @@ import ParticleBackground from "../../components/ParticleBackground";
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen flex items-center justify-center px-6 relative border border-red-600" style={{ backgroundColor: 'var(--color-background)' }}>
+    <main className="landing-lock sm:min-h-screen h-dvh flex items-center justify-center px-6 relative" style={{ backgroundColor: 'var(--color-background)' }}>
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}

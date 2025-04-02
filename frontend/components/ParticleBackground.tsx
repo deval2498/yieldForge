@@ -32,7 +32,7 @@ export default function ParticleBackground() {
   }
 
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden border border-blue-600">
+    <div className="absolute inset-0 z-0 overflow-hidden">
       {particles.map((particle, i) => (
         <motion.div
           key={i}
