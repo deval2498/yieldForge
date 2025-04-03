@@ -93,13 +93,13 @@ export default function Navbar() {
               <Link
                 key={tab.name}
                 href={tab.href}
-                className="hover:text-primary text-sm"
+                className="hover:text-primary lg:text-sm md:text-xs"
               >
                 {tab.name}
               </Link>
             ))}
           </div>
-          <div className="flex gap-6 items-center text-sm">
+          <div className="flex gap-6 items-center lg:text-sm md:text-xs">
             {isConnected && (
               <div
                 className="relative group cursor-pointer text-sm flex items-center gap-1 text-white"
@@ -112,12 +112,12 @@ export default function Navbar() {
                 <span className="hover:text-primary">{shorten(address!)}</span>
 
                 {/* Icon container */}
-                <span className="ml-1 w-4 h-4 relative">
+                <span className="relative inline-block w-0 h-0">
                   {/* Clipboard icon on hover */}
                   {!copied && (
                     <Clipboard
                       size={16}
-                      className="absolute top-0 left-0 transition-opacity duration-200 opacity-0 group-hover:opacity-100 text-[color:var(--color-text-muted)]"
+                      className="absolute -top-1 -left-1 transition-opacity duration-200 opacity-0 group-hover:opacity-100 text-[color:var(--color-text-muted)]"
                     />
                   )}
 
@@ -125,7 +125,7 @@ export default function Navbar() {
                   {copied && (
                     <CheckCircle2
                       size={16}
-                      className="absolute top-0 left-0 text-primary"
+                      className="absolute -top-1 -left-1 text-primary"
                     />
                   )}
                 </span>
@@ -169,17 +169,6 @@ export default function Navbar() {
               {tab.name}
             </Link>
           ))}
-
-          <button
-            onClick={() => {
-              if (isConnected) disconnect();
-              else connect({ connector: injected() });
-              setOpen(false);
-            }}
-            className="bg-primary text-black px-3 py-1 rounded-lg text-xs mt-2 w-fit"
-          >
-            {isConnected ? shorten(address!) : "Connect"}
-          </button>
         </div>
       </div>
     </nav>
