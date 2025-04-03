@@ -3,14 +3,16 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { injected } from 'wagmi/connectors';
-import { Menu } from "lucide-react";
+import { injected } from "wagmi/connectors";
+import { Menu, Clipboard, CheckCircle2 } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function Navbar() {
   const { address, isConnected } = useAccount();
   const { connect } = useConnect();
   const { disconnect } = useDisconnect();
   const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const shorten = (addr: string) => addr.slice(0, 6) + "..." + addr.slice(-4);
 
@@ -21,17 +23,20 @@ export default function Navbar() {
     { name: "Create Strategy", href: "/create-strategy" },
   ];
 
-  return (
-    <nav className="w-full bg-background text-white px-4 py-3 font-sans">
-      <div className="max-w-7xl mx-auto flex justify-between items-center md:justify-between">
+  const handleCopy = () => {
+    if (!address) return;
+    navigator.clipboard.writeText(address);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000); // Hide after 2 seconds
+  };
 
+  return (
+    <nav className="w-full bg-background text-white px-4 py-3 font-sans relative z-50">
+      <div className="max-w-7xl mx-auto flex justify-between items-center md:justify-between">
         {/* 👇 Mobile Layout Header */}
         <div className="flex w-full items-center justify-between md:hidden">
           {/* Menu Button on left */}
-          <button
-            className="text-gray-400"
-            onClick={() => setOpen(!open)}
-          >
+          <button className="text-gray-400" onClick={() => setOpen(!open)}>
             <Menu size={24} />
           </button>
 
@@ -41,12 +46,40 @@ export default function Navbar() {
           </Link>
 
           {/* Connect Button on right */}
-          <button
-            onClick={() => (isConnected ? disconnect() : connect({ connector: injected() }))}
-            className="bg-primary text-black px-3 py-1 rounded-lg text-xs"
-          >
-            {isConnected ? shorten(address!) : "Connect"}
-          </button>
+          <div className="flex gap-6 items-center text-xs">
+            {isConnected && (
+              <span
+                onClick={handleCopy}
+                className="cursor-pointer hover:text-primary"
+              >
+                {shorten(address!)}
+              </span>
+            )}
+            <button
+              onClick={() => {
+                if (isConnected) disconnect();
+                else connect({ connector: injected() });
+              }}
+              className="bg-primary text-black px-3 py-1 rounded-lg text-sm"
+            >
+              {isConnected ? "Disconnect" : "Connect"}
+            </button>
+          </div>
+          {copied && (
+            <AnimatePresence>
+              {copied && (
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 30 }}
+                  transition={{ duration: 0.2, ease: "easeInOut" }}
+                  className="fixed bottom-4 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-surface text-white text-sm rounded-lg shadow-md z-50"
+                >
+                  Copied!
+                </motion.div>
+              )}
+            </AnimatePresence>
+          )}
         </div>
 
         {/* 👇 Desktop Tabs */}
@@ -56,7 +89,7 @@ export default function Navbar() {
           </Link>
 
           <div className="flex gap-6 items-center">
-            {tabs.map(tab => (
+            {tabs.map((tab) => (
               <Link
                 key={tab.name}
                 href={tab.href}
@@ -64,32 +97,91 @@ export default function Navbar() {
               >
                 {tab.name}
               </Link>
-          ))}
+            ))}
           </div>
+          <div className="flex gap-6 items-center text-sm">
+            {isConnected && (
+              <div
+                className="relative group cursor-pointer text-sm flex items-center gap-1 text-white"
+                onClick={() => {
+                  navigator.clipboard.writeText(address!);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }}
+              >
+                <span className="hover:text-primary">{shorten(address!)}</span>
 
-          <button
-            onClick={() => (isConnected ? disconnect() : connect({ connector: injected() }))}
-            className="bg-primary text-black px-4 py-1.5 rounded-xl text-sm"
-          >
-            {isConnected ? shorten(address!) : "Connect Wallet"}
-          </button>
+                {/* Icon container */}
+                <span className="ml-1 w-4 h-4 relative">
+                  {/* Clipboard icon on hover */}
+                  {!copied && (
+                    <Clipboard
+                      size={16}
+                      className="absolute top-0 left-0 transition-opacity duration-200 opacity-0 group-hover:opacity-100 text-[color:var(--color-text-muted)]"
+                    />
+                  )}
+
+                  {/* Tick icon after copy */}
+                  {copied && (
+                    <CheckCircle2
+                      size={16}
+                      className="absolute top-0 left-0 text-primary"
+                    />
+                  )}
+                </span>
+              </div>
+            )}
+            <button
+              onClick={() => {
+                if (isConnected) disconnect();
+                else connect({ connector: injected() });
+              }}
+              className="bg-primary text-black px-4 py-1.5 rounded-xl"
+            >
+              {isConnected ? "Disconnect Wallet" : "Connect Wallet"}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile Dropdown Menu */}
+      {/* Backdrop */}
       {open && (
-        <div className="md:hidden mt-2 flex flex-col gap-3 px-2 border-t border-border pt-2">
-          {tabs.map(tab => (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur z-40"
+          onClick={() => setOpen(false)}
+        />
+      )}
+
+      {/* Sliding Mobile Menu */}
+      <div
+        className={`fixed top-0 left-0 h-full w-1/2 bg-surface border-r border-border p-4 z-50 transition-transform duration-300 ease-in-out ${
+          open ? "translate-x-0" : "-translate-x-full"
+        } md:hidden`}
+      >
+        <div className="flex flex-col gap-4">
+          {tabs.map((tab) => (
             <Link
               key={tab.name}
               href={tab.href}
               className="text-sm text-white hover:text-primary"
+              onClick={() => setOpen(false)}
             >
               {tab.name}
             </Link>
           ))}
+
+          <button
+            onClick={() => {
+              if (isConnected) disconnect();
+              else connect({ connector: injected() });
+              setOpen(false);
+            }}
+            className="bg-primary text-black px-3 py-1 rounded-lg text-xs mt-2 w-fit"
+          >
+            {isConnected ? shorten(address!) : "Connect"}
+          </button>
         </div>
-      )}
+      </div>
     </nav>
   );
 }
