@@ -4,3 +4,6 @@
 [submodule "contracts/YieldForge/lib/openzeppelin-contracts"]
 	path = contracts/YieldForge/lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "contracts/YieldForge/lib/chainlink"]
+	path = contracts/YieldForge/lib/chainlink
+	url = https://github.com/smartcontractkit/chainlink

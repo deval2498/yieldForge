@@ -117,7 +117,7 @@ export default function Navbar() {
                   {!copied && (
                     <Clipboard
                       size={16}
-                      className="absolute -top-1 -left-1 transition-opacity duration-200 opacity-0 group-hover:opacity-100 text-[color:var(--color-text-muted)]"
+                      className="absolute -top-2 -left-1 transition-opacity duration-200 opacity-0 group-hover:opacity-100 text-[color:var(--color-text-muted)]"
                     />
                   )}
 
@@ -125,7 +125,7 @@ export default function Navbar() {
                   {copied && (
                     <CheckCircle2
                       size={16}
-                      className="absolute -top-1 -left-1 text-primary"
+                      className="absolute -top-2 -left-1 text-primary"
                     />
                   )}
                 </span>
